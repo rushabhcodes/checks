@@ -16,10 +16,9 @@ type CourtyardElement =
   | PcbCourtyardOutline
 
 function doCourtyardLayersOverlap(
-  layerA: string | undefined,
-  layerB: string | undefined,
+  layerA: CourtyardElement["layer"],
+  layerB: CourtyardElement["layer"],
 ): boolean {
-  if (!layerA || !layerB) return true
   return layerA === layerB
 }
 
