@@ -46,7 +46,7 @@ test("overlapping courtyards on different layers should not be flagged", async (
   await circuit.renderUntilSettled()
 
   const renderedCircuitJson = circuit.getCircuitJson() as AnyCircuitElement[]
-  const circuitJson = renderedCircuitJson.filter(
+  const circuitJson: AnyCircuitElement[] = renderedCircuitJson.filter(
     (el) => el.type !== "pcb_courtyard_overlap_error",
   )
 
@@ -57,15 +57,17 @@ test("overlapping courtyards on different layers should not be flagged", async (
   expect(courtyards.map((el) => el.layer)).toEqual(["top", "top"])
 
   const bottomLayerComponentId = courtyards[1].pcb_component_id
-  const circuitJsonWithDifferentLayers = circuitJson.map((el) => {
-    if (
-      el.type === "pcb_courtyard_rect" &&
-      el.pcb_component_id === bottomLayerComponentId
-    ) {
-      return { ...el, layer: "bottom" }
-    }
-    return el
-  })
+  const circuitJsonWithDifferentLayers: AnyCircuitElement[] = circuitJson.map(
+    (el) => {
+      if (
+        el.type === "pcb_courtyard_rect" &&
+        el.pcb_component_id === bottomLayerComponentId
+      ) {
+        return { ...el, layer: "bottom" as const }
+      }
+      return el
+    },
+  )
 
   const layeredCourtyards = circuitJsonWithDifferentLayers.filter(
     (el): el is PcbCourtyardRect => el.type === "pcb_courtyard_rect",
